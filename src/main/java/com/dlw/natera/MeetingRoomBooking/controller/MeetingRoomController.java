@@ -30,7 +30,7 @@ public class MeetingRoomController {
 	/**
 	 * Creates a new meeting room.
 	 *
-	 * @param meetingRoom the meeting room to create
+	 * @param request the meeting room to create
 	 * @return the created meeting room
 	 */
 	@PostMapping
