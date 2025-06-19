@@ -1,0 +1,206 @@
+Configuration:
+  name: Default
+
+  Properties:
+    Property:
+      - name: logging-dir
+        value: ${env:LOGGING_DIR:-/tmp}
+      - name: app-name
+        value: charge-log
+      - name: log-pattern
+        value: "%d{dd HH:mm:ss,SSS} [%t] %-5level %logger{1.} - %msg%n"
+
+  Appenders:
+    # RollingFile:
+    #   name: RollingFile
+    #   filename: ${logging-dir}/${app-name}-rolling.log
+    #   filePattern: ${logging-dir}/${app-name}-rolling-%d{MM-dd-yy-HH-mm-ss}-%i.log
+    #   PatternLayout:
+    #     pattern: ${log-pattern}
+    #   Policies:
+    #     SizeBasedTriggeringPolicy:
+    #       size: 20MB
+    #   DefaultRolloverStrategy:
+    #     max: 10
+    File:
+      name: File
+      fileName: ${logging-dir}/${app-name}.log
+      append: false
+      PatternLayout:
+        pattern: ${log-pattern}
+    Console:
+      name: Stdout
+      PatternLayout:
+        pattern: ${log-pattern}
+
+  Loggers:
+    root:
+      level: ${env:LOGGING_LEVEL_ROOT:-info}
+      AppenderRef:
+        - ref: Stdout
+        - ref: File
+        # - ref: RollingFile
+
+    logger:
+      -
+        # Ask Hibernate to print SQL statements and binding parameters
+        # For H6 this is equivalent to org.hibernate.sql and org.hibernate.orm.jdbc.bind
+        name: sql
+        level: debug
+      -
+        name: org.springframework
+        level: ${env:LOGGING_LEVEL_SPRING:-trace}
+      -
+        name: org.hibernate
+        level: ${env:LOGGING_LEVEL_HIBERNATE:-info}
+      -
+        # Change level to trace to see which property files are loaded (or not)
+        name: org.springframework.boot.context.config
+        level: trace
+      -
+        # Change level to trace to see every SQL statement executed by Spring JDBC ScriptUtils
+        name: org.springframework.boot.jdbc.datasource.init
+        level: trace
+      -
+        # Log webflux response results (1 of 2)
+        name: org.springframework.web.reactive.function.client.ExchangeFunctions
+        level: trace
+      -
+        # Log webflux response results (2 of 2)
+        name: reactor.netty.resources.PooledConnectionProvider
+        level: debug
+      -
+        # Keeping trace level prints URL mappings for controllers and routers. (1 of 2)
+        name: org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping
+        level: trace
+      -
+        # Keeping trace level prints URL mappings for controllers and routers. (2 of 2)
+        name: org.springframework.web.reactive.function.server.support.RouterFunctionMapping
+        level: trace
+
+      ####################################################################################
+      # Do not change these, unless really have to
+      -
+        name: io.projectreactor
+        level: info
+      -
+        name: io.netty
+        level: info
+      -
+        name: org.fasterxml
+        level: info
+      -
+        name: org.google.gson
+        level: trace
+      -
+        name: org.apache.kafka
+        level: info
+      -
+        name: com.couchbase
+        level: info
+      -
+        name: org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping
+        level: info
+      -
+        name: org.springframework.context.annotation
+        level: info
+      -
+        name: org.springframework.context.event
+        level: info
+      -
+        name: org.springframework.boot.autoconfigure
+        level: info
+      -
+        name: org.springframework.core.env
+        level: info
+      -
+        name: org.springframework.data.rest.webmvc.json.PersistentEntityJackson2Module
+        level: info
+      -
+        name: org.springframework.kafka.annotation.KafkaListenerAnnotationBeanPostProcessor
+        level: info
+      -
+        name: org.hibernate.boot.registry.selector.internal
+        level: info
+      -
+        # Changing level to trace enables a lot of useless messages "Returning cached instance of singleton bean'XXXX'"
+        # There are also a couple of other messages that are related to bean lifecycle, but not many.
+        name: org.springframework.beans.factory.support.DefaultListableBeanFactory
+        level: info
+      -
+        # Changing level to trace enables printout of all received objects, which may be quite big. (1 of 4)
+        name: org.springframework.http.codec.json.Jackson2JsonDecoder
+        level: debug
+      -
+        # Changing level to trace enables printout of all received objects, which may be quite big. (2 of 4)
+        name: org.springframework.http.HttpLogging
+        level: debug
+      -
+        # Changing level to trace enables printout of all received objects, which may be quite big. (3 of 4)
+        name: org.springframework.web.HttpLogging
+        level: debug
+      -
+        # Changing level to trace enables printout of all received objects, which may be quite big. (4 of 4)
+        name: org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod
+        level: debug
+      -
+        # Debug value prints all exposed endpoints (swagger 2)
+        name: springfox.documentation.spring.web.plugins.DefaultRequestHandlerCombiner
+        level: debug
+      -
+        # Changing level to trace enables a lot of useless messages "Method is declared on Advised interface"
+        name: org.springframework.aop.framework.CglibAopProxy
+        level: info
+      -
+        # Changing level to trace enables a lot of useless messages "Searching directory <dir> for files matching pattern"
+        name: org.springframework.core.io.support.PathMatchingResourcePatternResolver
+        level: info
+      -
+        # Changing level to trace enables a lot of useless messages related to scanning and filtering of repository classes
+        name: org.springframework.data.repository.config.RepositoryComponentProvider
+        level: debug
+      -
+        # Changing level to trace enables a lot of useless messages "found bean property 'property' of type [class]"
+        name: org.springframework.beans.CachedIntrospectionResults
+        level: info
+      -
+        # Changing level to trace enables a lot of useless transaction-oriented messages
+        name: org.springframework.orm.jpa.JpaTransactionManager
+        level: info
+      -
+        # Changing level to trace enables a lot of useless factory loading messages
+        name: org.springframework.core.io.support.SpringFactoriesLoader
+        level: info
+      -
+        # Changing level to debug enables a lot of useless messages 
+        # "Cannot find '.class' file for class <CGILIB class> - unable to determine constructor/method parameter names"
+        name: org.springframework.core.LocalVariableTableParameterNameDiscoverer
+        level: info
+      -
+        # Changing level to debug enables a lot of useless classpath printouts
+        name: org.springframework.boot.context.logging.ClasspathLoggingApplicationListener
+        level: info
+      -
+        # Changing level to trace enables a lot of useless hex dump printouts
+        name: io.r2dbc.mssql.client
+        level: debug
+      -
+        # Changing level to trace enables terminal stack printout
+        name: reactor.netty.channel.ChannelOperations
+        level: debug
+      -
+        # Changing level to debug enables logging of RowToken objects which don't have toString methods
+        name: io.r2dbc.mssql.client.ReactorNettyClient
+        level: info
+      -
+        # Changing level to debug enables logging of SSL-related messages
+        name: io.r2dbc.mssql.client.ssl
+        level: info
+      -
+        # Changing level to trace enables a lot of swagger printouts.
+        name: io.swagger.v3.core.converter.ModelConverterContextImpl
+        level: info
+      -
+        # Changing level to trace enables a lot of actuator autoconfiguration printouts.
+        name: org.springframework.boot.actuate.autoconfigure.endpoint.condition.OnAvailableEndpointCondition
+        level: debug
