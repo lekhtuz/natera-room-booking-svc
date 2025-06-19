@@ -40,13 +40,15 @@ public class BookingController {
 	public ResponseEntity<Optional<Booking>> createBooking(@RequestBody CreateBookingRequest request) {
 		log.info("Creating booking with request: {}", request);
 
-		if (request.getStartDateTime().isAfter(request.getEndDateTime())) {
+		// This code should go into the validator
+		if (!request.getStartDateTime().isBefore(request.getEndDateTime())) {
 			log.error("Start date cannot be after end date");
 			return ResponseEntity.badRequest().build();
 		}
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(request));
-
+		return bookingService.createBooking(request)
+			.map(booking -> ResponseEntity.status(HttpStatus.CREATED).body(Optional.of(booking)))
+		 	.orElse(ResponseEntity.badRequest().build());
 	}
 
 	/**
@@ -94,6 +96,6 @@ public class BookingController {
 		log.info("Deleting booking with ID: {}", id);
 
 		bookingService.deleteBooking(id);
-		return "Booking " + id + " deleted or never existed.";
+		return "Booking " + id + " successfully deleted or has never existed.";
 	}
 }

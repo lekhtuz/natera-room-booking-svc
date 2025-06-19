@@ -33,6 +33,7 @@ public class BookingEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userName;
+    //TODO: See if Postgres has a suitable timestamp range type
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

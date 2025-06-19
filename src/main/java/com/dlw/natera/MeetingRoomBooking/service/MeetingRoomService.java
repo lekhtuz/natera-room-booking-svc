@@ -1,15 +1,17 @@
 package com.dlw.natera.MeetingRoomBooking.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static com.dlw.natera.MeetingRoomBooking.service.ConversionUtils.toMeetingRoom;
+import static com.dlw.natera.MeetingRoomBooking.service.ConversionUtils.toMeetingRoomEntity;
 
-import com.dlw.natera.MeetingRoomBooking.entity.MeetingRoomEntity;
 import com.dlw.natera.MeetingRoomBooking.model.CreateMeetingRoomRequest;
 import com.dlw.natera.MeetingRoomBooking.model.MeetingRoom;
 import com.dlw.natera.MeetingRoomBooking.repository.MeetingRoomRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MeetingRoomService {
@@ -25,7 +27,7 @@ public class MeetingRoomService {
 	public List<MeetingRoom> getAllMeetingRooms() {
 		return meetingRoomRepository.findAll()
 				.stream()
-				.map(this::toMeetingRoom)
+				.map(ConversionUtils::toMeetingRoom)
 				.toList();
 	}
 
@@ -37,14 +39,14 @@ public class MeetingRoomService {
 	 */
 	public Optional<MeetingRoom> getMeetingRoomById(Long id) {
 		return meetingRoomRepository.findById(id)
-				.map(this::toMeetingRoom);
+				.map(ConversionUtils::toMeetingRoom);
 	}
 
 	/**
 	 * Creates a new meeting room.
 	 *
-	 * @param meetingRoom the meeting room to create
-	 * @return the created meeting room
+	 * @param request the meeting room to create
+	 * @return the created meeting room or empty()
 	 */
 	public Optional<MeetingRoom> createMeetingRoom(CreateMeetingRoomRequest request) {
 		try {
@@ -61,20 +63,5 @@ public class MeetingRoomService {
 	 */
 	public void deleteMeetingRoom(Long id) {
 		meetingRoomRepository.deleteById(id);
-	}
-
-	private MeetingRoom toMeetingRoom(MeetingRoomEntity entity) {
-		return MeetingRoom.builder()
-				.id(entity.getId())
-				.name(entity.getName())
-				.location(entity.getLocation())
-				.build();
-	}
-
-	private MeetingRoomEntity toMeetingRoomEntity(CreateMeetingRoomRequest request) {
-		return MeetingRoomEntity.builder()
-				.name(request.getName())
-				.location(request.getLocation())
-				.build();
 	}
 }

@@ -40,15 +40,25 @@ retrieveRooms
 
 echo
 echo Retrieving room 100000...
-curl -v $BASE_URL/rooms/10000
+curl -s $BASE_URL/rooms/10000
 
 echo
 echo Retrieving bookings...
 curl -s $BASE_URL/bookings | jq .
 
 echo
-echo Creating booking...
-curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4, "userName" : "user1", "startDateTime": "2025-10-01T10:00:00Z", "endDateTime": "2025-10-01T12:00:00Z"}'
+echo Creating correct bookings...
+curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4, "userName" : "user1", "startDateTime": "2025-10-01T10:00:00Z", "endDateTime": "2025-10-01T12:00:00Z"}' | jq .
+curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4, "userName" : "user2", "startDateTime": "2025-10-01T14:00:00Z", "endDateTime": "2025-10-01T15:00:00Z"}' | jq .
+curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4, "userName" : "user3", "startDateTime": "2025-10-01T15:00:00Z", "endDateTime": "2025-10-01T16:00:00Z"}' | jq .
+
+echo
+echo Creating a booking with invalid room number...
+curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4000, "userName" : "user1", "startDateTime": "2025-10-01T10:00:00Z", "endDateTime": "2025-10-01T12:00:00Z"}'
+
+echo
+echo Creating a booking when the room is not available...
+curl -s -X POST $BASE_URL/bookings -H "Content-Type: application/json" -d '{"roomId": 4, "userName" : "user1", "startDateTime": "2025-10-01T10:00:00Z", "endDateTime": "2025-10-01T13:00:00Z"}'
 
 echo
 echo Retrieving bookings...

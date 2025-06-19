@@ -80,6 +80,6 @@ public class MeetingRoomController {
 		log.info("Deleting meeting room with ID: {}", id);
 
 		meetingRoomService.deleteMeetingRoom(id);
-		return "Meeting room " + id + " deleted or never existed.";
+		return "Meeting room " + id + " successfully deleted or has never existed.";
 	}
 }

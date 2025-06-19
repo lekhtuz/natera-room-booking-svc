@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+/**
+ * Represents a meeting room in the booking system.
+ */
 @Data
 @Builder
 public class MeetingRoom {

@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+/**
+ * Request model for creating a new booking for a meeting room.
+ */
 @Data
 @Builder
 public class CreateBookingRequest {
